@@ -39,7 +39,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document); // 'api' is the URL path for your Swagger UI (e.g., http://localhost:3000/api)
   // --- End Swagger Setup ---
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000); // 3000 is a fallback for local dev
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
