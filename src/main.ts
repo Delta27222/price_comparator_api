@@ -8,7 +8,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify'; // Import Fastify adapter
 
-async function bootstrap() { 
+async function bootstrap() {
   // Use FastifyAdapter for Fastify application
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -39,7 +39,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document); // 'api' is the URL path for your Swagger UI (e.g., http://localhost:3000/api)
   // --- End Swagger Setup ---
 
-  await app.listen(parseInt(process.env.PORT as string) || 3000); // 3000 is a fallback for local dev
+  const port = process.env.PORT || 3000;
+  await app.listen(port, '0.0.0.0');
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
