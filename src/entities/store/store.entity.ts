@@ -16,7 +16,7 @@ export class Store {
     maxLength: 100,
     example: 'Grocery Mart',
   })
-  @Column({ unique: true, length: 100 })
+  @Column({ length: 100 })
   name: string;
 
   @ApiProperty({

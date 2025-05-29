@@ -17,7 +17,7 @@ export class Product {
     maxLength: 100,
     example: 'Smartphone Model X',
   })
-  @Column({ unique: true, length: 100 })
+  @Column({ length: 100 })
   name: string;
 
   @ApiProperty({

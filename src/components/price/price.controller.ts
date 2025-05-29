@@ -25,6 +25,7 @@ import {
   ApiBody, // Para describir el cuerpo de la solicitud
   ApiParam, // Para describir parámetros de ruta
 } from '@nestjs/swagger'; // Importa los decoradores de Swagger
+import { Product } from 'src/entities/product/product.entity';
 
 @ApiTags('prices') // Agrupa los endpoints de este controlador bajo la etiqueta "prices" en Swagger UI
 @Controller('prices') // Prefijo de ruta para todas las rutas de este controlador: /prices
@@ -60,6 +61,28 @@ export class PricesController {
     return this.pricesService.findOne(id);
   }
 
+  @Get('product/:productId')
+  @ApiOperation({ summary: 'Retrieve all prices of a product by its ID' })
+  @ApiParam({
+    name: 'productId',
+    description: 'UUID of the product whose prices are being retrieved',
+    type: String,
+    format: 'uuid',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully retrieved prices for the product',
+    type: [Price],
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Product not found',
+  })
+  async findPricesOfProduct(
+    @Param('productId', ParseUUIDPipe) productId: string,
+  ): Promise<{ product: Product; prices: Price[] }> {
+    return this.pricesService.findPricesOfProduct(productId);
+  }
   @Post() // POST /prices
   @HttpCode(HttpStatus.CREATED) // Retorna 201 Created si la creación es exitosa.
   @ApiOperation({ summary: 'Create a new price' })

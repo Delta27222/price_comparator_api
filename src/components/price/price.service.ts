@@ -94,6 +94,38 @@ export class PricesService {
   }
 
   /**
+   * Obtiene los precios de un producto en especifico
+   * Siempre carga las relaciones para mostrar el detalle completo.
+   * @param id El ID del precio (UUID).
+   * @returns Una promesa que resuelve al precio encontrado.
+   * @throws NotFoundException Si el precio no se encuentra.
+   */
+  async findPricesOfProduct(
+    productId: string,
+  ): Promise<{ product: Product; prices: Price[] }> {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID "${productId}" not found.`);
+    }
+
+    const prices = await this.priceRepository.find({
+      where: { product: { id: productId } },
+      relations: ['product', 'store', 'period'],
+      order: {
+        amount: 'ASC',
+      },
+    });
+
+    return {
+      product,
+      prices,
+    };
+  }
+
+  /**
    * Crea un nuevo precio.
    * Primero valida que las entidades relacionadas existan.
    * @param createPriceDto Los datos para crear el precio.
