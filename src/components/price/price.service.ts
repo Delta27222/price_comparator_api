@@ -134,23 +134,22 @@ export class PricesService {
   async create(createPriceDto: CreatePriceDto): Promise<Price> {
     const { productId, storeId, periodId, amount } = createPriceDto;
 
-    // 1. Validar que las entidades relacionadas existan
     const { product, store, period } = await this.validateRelatedEntities(
       productId,
       storeId,
       periodId,
     );
 
-    // 2. Crear una nueva instancia de Price
     const newPrice = this.priceRepository.create({
       amount,
-      product, // Asigna el objeto Product (TypeORM maneja el productId)
-      store, // Asigna el objeto Store
-      period, // Asigna el objeto Period
+      product,
+      store,
+      period,
     });
 
-    // 3. Guardar el nuevo precio en la base de datos
-    return this.priceRepository.save(newPrice);
+    // Save the new price
+    const savedPrice = await this.priceRepository.save(newPrice);
+    return savedPrice;
   }
 
   /**

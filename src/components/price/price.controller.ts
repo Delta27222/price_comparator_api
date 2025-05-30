@@ -106,10 +106,16 @@ export class PricesController {
     description: 'A related Product, Store, or Period was not found.',
   }) // Specific for Price due to relations
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) // Aplica validación DTO.
-  async create(@Body() createPriceDto: CreatePriceDto): Promise<Price> {
-    return this.pricesService.create(createPriceDto);
+  async createPrice(@Body() createPriceDto: CreatePriceDto) {
+    try {
+      const price = await this.pricesService.create(createPriceDto);
+      return price; // NestJS will automatically send a 201 Created by default for @Post
+    } catch (error) {
+      // Log the error here to see what's being thrown
+      console.error('Error creating price:', error);
+      throw error; // Re-throw or handle specific HTTP exceptions
+    }
   }
-
   @Put(':id') // PUT /prices/:id
   @ApiOperation({ summary: 'Update an existing price by ID' })
   @ApiParam({
