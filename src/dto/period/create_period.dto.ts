@@ -1,11 +1,5 @@
 // src/dto/period/create-period.dto.ts
-import {
-  IsString,
-  IsOptional,
-  MaxLength,
-  IsBoolean,
-  IsUrl,
-} from 'class-validator';
+import { IsString, IsOptional, MaxLength, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger'; // Importa ApiProperty
 
 export class CreatePeriodDto {
@@ -42,7 +36,7 @@ export class CreatePeriodDto {
     required: false,
     example: 'https://example.com/images/summer_period.png',
   })
-  @IsUrl({}, { message: 'La imagen debe ser una URL válida.' }) // Podrías usar IsString si no siempre es una URL
+  // @IsUrl({}, { message: 'La imagen debe ser una URL válida.' }) // Podrías usar IsString si no siempre es una URL
   @IsOptional()
   image?: string; // Opcional, ya que es nullable en la entidad
 }

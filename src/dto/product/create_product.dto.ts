@@ -6,7 +6,6 @@ import {
   IsOptional,
   Min,
   MaxLength,
-  IsUrl, // Importa IsUrl para validar que sea una URL
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -54,7 +53,7 @@ export class CreateProductDto {
     required: false, // La propiedad es opcional
     example: 'https://example.com/images/laptop_xyz.jpg',
   })
-  @IsUrl({}, { message: 'La imagen debe ser una URL válida.' }) // Valida que sea una URL
+  // @IsUrl({}, { message: 'La imagen debe ser una URL válida.' }) // Valida que sea una URL
   @IsOptional() // Marca la propiedad como opcional
   image?: string; // Declara la propiedad como opcional
 }
