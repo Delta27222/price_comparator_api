@@ -75,6 +75,15 @@ export class PricesService {
     });
   }
 
+  async findAllProductsWithShortestPrice(): Promise<PriceLike[]> {
+    // Obtiene todos los precios y agrupa por producto
+    const prices = await this.priceRepository.find();
+    // Crea un mapa para almacenar el precio más bajo por producto
+    const productPricesMap = findShortestPrices(prices);
+    // Devuelve los precios más bajos por producto como un array
+    return Object.values(productPricesMap);
+  }
+
   /**
    * Obtiene un precio por su ID.
    * Siempre carga las relaciones para mostrar el detalle completo.
@@ -211,4 +220,39 @@ export class PricesService {
       throw new NotFoundException(`Price with ID "${id}" not found.`);
     }
   }
+}
+
+interface PriceLike {
+  productId?: string;
+  amount: string | number;
+  storeId?: string;
+  // Add other fields as needed
+}
+
+function findShortestPrices(pricesList: PriceLike[]): PriceLike[] {
+  const shortestPrices: {
+    [productId: string]: PriceLike & { amount: number };
+  } = {};
+
+  for (const price of pricesList) {
+    const productId = price?.productId;
+    const currentAmount = parseFloat(price.amount as string); // Convert string amount to a number
+
+    if (!productId) continue;
+
+    // If this product hasn't been seen before, or if the current amount is lower
+    if (
+      !shortestPrices[productId] ||
+      currentAmount < shortestPrices[productId].amount
+    ) {
+      shortestPrices[productId] = {
+        productId: productId,
+        amount: currentAmount,
+        storeId: price.storeId,
+      };
+    }
+  }
+
+  // Convert the object back to an array of values if preferred
+  return Object.values(shortestPrices);
 }
