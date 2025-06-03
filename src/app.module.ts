@@ -34,6 +34,8 @@ import { Price } from './entities/price/price.entity';
       database: process.env.POSTGRESQL_ADDON_DB,
       entities: [Product, Store, Period, Price],
       synchronize: true, // Disabled to avoid permission issues
+      ssl: true,
+      autoLoadEntities: true,
     }),
     TypeOrmModule.forFeature([Product, Store, Period, Price]), // Registra la entidad para este módulo
   ],
